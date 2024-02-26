@@ -1,7 +1,19 @@
 from PIL import Image 
-import numpy as np 
-a = np.asarray(Image.open(r'C:\Users\prima\Desktop\test.jpg').convert('L')).astype('float') # 在这里修改图片路径
-depth = 10.
+import numpy as np
+import sys
+import os
+depth = 5.
+rawSourcePath = os.path.realpath("./input.jpg")
+rawOutputPath = os.path.realpath("./output.png")
+if (len(sys.argv) > 1):
+    depth = sys.argv[1]
+if (len(sys.argv) > 2) :
+    rawSourcePath = os.path.realpath(sys.argv[2])
+if (len(sys.argv) > 3) :
+    rawOutputPath = sys.argv[3]
+
+a = np.asarray(Image.open(rawSourcePath, "r").convert('L')).astype('float') # 在这里修改图片路径
+depth = 2.4
 grad = np.gradient(a)
 grad_x, grad_y = grad
 grad_x = grad_x * depth / 100. 
@@ -20,4 +32,5 @@ dz = np.sin(vec_el)
 b = 255 * (dx * uni_x + dy * uni_y + dz * uni_z) 
 b = b.clip(0, 255) 
 im = Image.fromarray(b.astype('uint8'))
-im.save(r'C:\Users\prima\Desktop\ol.jpg') # 生成图片所在的路径
+im.save(rawOutputPath) # 生成图片所在的路径
+print("input: ", rawSourcePath, "depth: ", depth, "output: ", rawOutputPath)
